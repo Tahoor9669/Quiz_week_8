@@ -1,18 +1,29 @@
-import matplotlib.pyplot as plt
-        
+import sqlite3
+
+# Connect to the database
+conn = sqlite3.connect('climate.db')
+cursor = conn.cursor()
+
+# Define lists to store the data
 years = []
-co2 = []
-temp = []
+temperatures = []
+precipitation = []
 
-plt.subplot(2, 1, 1)
-plt.plot(years, co2, 'b--') 
-plt.title("Climate Data") 
-plt.ylabel("[CO2]") 
-plt.xlabel("Year (decade)") 
+# Fetch data from the database
+cursor.execute("SELECT year, temperature, precipitation FROM climate_data")
+data = cursor.fetchall()
 
-plt.subplot(2, 1, 2)
-plt.plot(years, temp, 'r*-') 
-plt.ylabel("Temp (C)") 
-plt.xlabel("Year (decade)") 
-plt.show() 
-plt.savefig("co2_temp_1.png") 
+for row in data:
+    year, temp, precip = row
+    years.append(year)
+    temperatures.append(temp)
+    precipitation.append(precip)
+
+# Close the database connection
+conn.close()
+
+# Now you can use the 'years', 'temperatures', and 'precipitation' lists for plotting
+
+# Example: Print the first 5 years and corresponding temperatures
+print("Years:", years[:5])
+print("Temperatures:", temperatures[:5])
